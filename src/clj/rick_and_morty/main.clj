@@ -14,16 +14,30 @@
 (def routes #{["/" :get hello :route-name ::root]
               ["/echo" :any echo :route-name ::echo]})
 
+(defonce instance (atom nil))
+
 (defn start
-  []
+  [do-join]
   (let [server-map {::http/type :jetty
                     ::http/host "0.0.0.0"
                     ::http/port 80
-                    ::http/join? true
+                    ::http/join? do-join
                     ::http/routes routes}
         server (http/create-server server-map)]
-    (http/start server)))
+    (http/start server)
+    (reset! instance server)))
 
+(defn stop
+  []
+  (http/stop (deref instance))
+  (reset! instance nil))
+
+(comment
+  (start false)
+
+  (stop)
+
+  )
 (defn -main
   [& args]
-  (start))
+  (start true))
