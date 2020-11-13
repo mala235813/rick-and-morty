@@ -30,8 +30,9 @@
 
 (defn stop
   []
-  (http/stop (deref instance))
-  (reset! instance nil))
+  (when (some? (deref instance))
+    (http/stop (deref instance))
+    (reset! instance nil)))
 
 (comment
   (start)
