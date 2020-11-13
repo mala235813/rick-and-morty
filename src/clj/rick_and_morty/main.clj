@@ -15,8 +15,8 @@
                           :body (with-out-str (pp/pprint context))}]
             (assoc context :response response)))})
 
-(def routes #{["/" :get hello :route-name ::root]
-              ["/echo" :any echo :route-name ::echo]})
+(def routes #{["/" :get #'hello :route-name ::root]
+              ["/echo" :any #'echo :route-name ::echo]})
 
 (defonce instance (atom nil))
 
