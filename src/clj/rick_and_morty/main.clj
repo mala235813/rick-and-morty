@@ -34,10 +34,18 @@
     (http/stop (deref instance))
     (reset! instance nil)))
 
+(defn restart
+  ([] (restart false))
+  ([do-join]
+   (stop)
+   (start do-join)))
+
 (comment
   (start)
 
   (stop)
+
+  (restart)
 
   )
 (defn -main
