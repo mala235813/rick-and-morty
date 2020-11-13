@@ -7,11 +7,13 @@
   {:status 200
    :body "Rick and morty app!"})
 
-(defn echo
-  [request]
-  {:status 200
-   :headers {"Content-Type" "text/plain"}
-   :body (with-out-str (pp/pprint request))})
+(def echo
+  {:name :echo
+   :enter (fn [context]
+          (let [response {:status 200
+                          :headers {"Content-Type" "text/plain"}
+                          :body (with-out-str (pp/pprint context))}]
+            (assoc context :response response)))})
 
 (def routes #{["/" :get hello :route-name ::root]
               ["/echo" :any echo :route-name ::echo]})
