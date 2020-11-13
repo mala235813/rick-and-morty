@@ -17,15 +17,16 @@
 (defonce instance (atom nil))
 
 (defn start
-  [do-join]
-  (let [server-map {::http/type :jetty
-                    ::http/host "0.0.0.0"
-                    ::http/port 80
-                    ::http/join? do-join
-                    ::http/routes routes}
-        server (http/create-server server-map)]
-    (http/start server)
-    (reset! instance server)))
+  ([] (start false))
+  ([do-join]
+   (let [server-map {::http/type :jetty
+                     ::http/host "0.0.0.0"
+                     ::http/port 80
+                     ::http/join? do-join
+                     ::http/routes routes}
+         server (http/create-server server-map)]
+     (http/start server)
+     (reset! instance server))))
 
 (defn stop
   []
@@ -33,7 +34,7 @@
   (reset! instance nil))
 
 (comment
-  (start false)
+  (start)
 
   (stop)
 
