@@ -1,2 +1,6 @@
 .cpcache
 .nrepl-port
+node_modules/
+.shadow-cljs/
+package-lock.json
+resources/public/app/
