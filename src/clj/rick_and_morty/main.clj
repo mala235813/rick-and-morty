@@ -94,7 +94,13 @@
 
   (crux/submit-tx @crux-node [[:crux.tx/put {:crux.db/id :foo
                                              :name "foo"
-                                             :desc "A foo!"}]])
+                                             :desc "A foo!"}]
+                              [:crux.tx/put {:crux.db/id :bar
+                                             :name "bar"
+                                             :desc "A bar!"}]
+                              [:crux.tx/put {:crux.db/id :qux
+                                             :name "qux"
+                                             :desc "A qux!"}]])
 
   (query-stuff @crux-node)
 
