@@ -3,6 +3,9 @@
             [crux.api :as crux]
             [io.pedestal.http :as http]))
 
+(declare query-stuff)
+(declare crux-node)
+
 (defn hello
   [request]
   {:status 200
@@ -16,8 +19,18 @@
                           :body (with-out-str (pp/pprint context))}]
             (assoc context :response response)))})
 
+(def get-stuff
+  {:name :get-stuff
+   :enter (fn [context]
+            (let [stuff (query-stuff @crux-node)
+                  response {:status 200
+                            :headers {"Content-Type" "text/plain"}
+                            :body (with-out-str (pp/pprint stuff))}]
+            (assoc context :response response)))})
+
 (def routes #{["/" :get #'hello :route-name ::root]
-              ["/echo" :any #'echo :route-name ::echo]})
+              ["/echo" :any #'echo :route-name ::echo]
+              ["/api/v1/stuff" :get get-stuff :route-name ::get-stuff]})
 
 (defonce instance (atom nil))
 
@@ -60,12 +73,26 @@
    (stop)
    (start do-join)))
 
+(defn query-stuff
+  [node]
+  (crux/q (crux/db node)
+          '{:find [name desc]
+            :where [[e :name name]
+                    [e :desc desc]]}))
+
 (comment
   (start)
 
   (stop)
 
   (restart)
+
+  (crux/submit-tx @crux-node [[:crux.tx/put {:crux.db/id :foo
+                                             :name "foo"
+                                             :desc "A foo!"}]])
+
+  (query-stuff @crux-node)
+
 
   )
 
